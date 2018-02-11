@@ -1,5 +1,5 @@
 ﻿import mysql_package = require('mysql');
-import mysql_events = require('mysql-events');
+import util = require('util');
 
 
 /**
@@ -7,30 +7,24 @@ import mysql_events = require('mysql-events');
  * Encapsule les actions liées à Mysql comme la connexion ou les différentes requêtes
  */
 
-class Mysql {
+export class Mysql {
     con: mysql_package.Connection;
-    host: string;
-    user: string;
-    password: string;
     initialized: boolean;
-    constructor(host: string, user: string, password: string) {
-        this.host = host;
-        this.user = user;
-        this.password = password;
+    conf;
+
+    constructor(conf) {
+        this.conf = conf;
         this.initialized = false;
     }
 
     connect() {
-        this.con = mysql_package.createConnection({
-            host: this.host,
-            user: this.user,
-            password: this.password
-        });
+        this.con = mysql_package.createConnection(this.conf);
+
         this.con.connect(function (err) {
             if (err) throw err;
             console.log("Connected to mysql");
             this.initialized = true;
-        });
+        });        
     }
 
     disconnect() {
@@ -53,7 +47,3 @@ class Mysql {
         });
     }
 }
-
-
-let mysql = new Mysql("127.0.0.1", "test", "test");
-export default mysql;

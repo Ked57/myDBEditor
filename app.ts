@@ -2,15 +2,25 @@
 import express = require('express');
 import path = require('path');
 
-import mysql from './model/mysql_wrapper';
+import { Mysql } from './model/mysql_wrapper';
+import { Db } from './model/db';
 
 import routes from './routes/index';
-import users from './routes/user';
 
 var app = express();
 
+let conf = {
+    host: "127.0.0.1",
+    user: "test",
+    password: "test"
+}
+
 //Connection à mysql
+let mysql = new Mysql(conf);
 mysql.connect();
+let db = new Db([],conf,'test');
+
+
 
 //Démarrage du moteur de vues
 app.set('views', path.join(__dirname, 'views'));
@@ -19,7 +29,6 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 //Catch des erreurs 404
 app.use(function (req, res, next) {

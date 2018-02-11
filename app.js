@@ -4,19 +4,23 @@ var debug = require("debug");
 var express = require("express");
 var path = require("path");
 var mysql_wrapper_1 = require("./model/mysql_wrapper");
+var db_1 = require("./model/db");
 var index_1 = require("./routes/index");
-var user_1 = require("./routes/user");
 var app = express();
+var conf = {
+    host: "127.0.0.1",
+    user: "test",
+    password: "test"
+};
 //Connection à mysql
-mysql_wrapper_1.default.connect();
-while (!mysql_wrapper_1.default.isInitialized) { }
-mysql_wrapper_1.default.query("show databases;");
+var mysql = new mysql_wrapper_1.Mysql(conf);
+mysql.connect();
+var db = new db_1.Db([], conf, 'test');
 //Démarrage du moteur de vues
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index_1.default);
-app.use('/users', user_1.default);
 //Catch des erreurs 404
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

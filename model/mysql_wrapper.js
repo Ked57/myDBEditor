@@ -6,18 +6,12 @@ var mysql_package = require("mysql");
  * Encapsule les actions liées à Mysql comme la connexion ou les différentes requêtes
  */
 var Mysql = /** @class */ (function () {
-    function Mysql(host, user, password) {
-        this.host = host;
-        this.user = user;
-        this.password = password;
+    function Mysql(conf) {
+        this.conf = conf;
         this.initialized = false;
     }
     Mysql.prototype.connect = function () {
-        this.con = mysql_package.createConnection({
-            host: this.host,
-            user: this.user,
-            password: this.password
-        });
+        this.con = mysql_package.createConnection(this.conf);
         this.con.connect(function (err) {
             if (err)
                 throw err;
@@ -44,6 +38,5 @@ var Mysql = /** @class */ (function () {
     };
     return Mysql;
 }());
-var mysql = new Mysql("127.0.0.1", "test", "test");
-exports.default = mysql;
+exports.Mysql = Mysql;
 //# sourceMappingURL=mysql_wrapper.js.map
