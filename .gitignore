@@ -1,7 +1,0 @@
-app.js
-*.map
-/model/*.js
-/routes/*.js
-/node_modules/
-/obj/
-/bin/
