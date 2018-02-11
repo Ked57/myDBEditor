@@ -3,19 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var debug = require("debug");
 var express = require("express");
 var path = require("path");
-var mysql_wrapper_1 = require("./model/mysql_wrapper");
-var db_1 = require("./model/db");
 var index_1 = require("./routes/index");
+var db_mgr_1 = require("./controller/db_mgr");
 var app = express();
-var conf = {
-    host: "127.0.0.1",
-    user: "test",
-    password: "test"
-};
-//Connection à mysql
-var mysql = new mysql_wrapper_1.Mysql(conf);
-mysql.connect();
-var db = new db_1.Db([], conf, 'test');
+var db_mgr;
+db_mgr = new db_mgr_1.DbMgr();
 //Démarrage du moteur de vues
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

@@ -2,24 +2,14 @@
 import express = require('express');
 import path = require('path');
 
-import { Mysql } from './model/mysql_wrapper';
-import { Db } from './model/db';
-
 import routes from './routes/index';
+
+import { DbMgr } from './controller/db_mgr'
 
 var app = express();
 
-let conf = {
-    host: "127.0.0.1",
-    user: "test",
-    password: "test"
-}
-
-//Connection à mysql
-let mysql = new Mysql(conf);
-mysql.connect();
-let db = new Db([],conf,'test');
-
+let db_mgr: DbMgr;
+db_mgr = new DbMgr();
 
 
 //Démarrage du moteur de vues

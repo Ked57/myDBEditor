@@ -10,13 +10,13 @@ var Mysql = /** @class */ (function () {
         this.conf = conf;
         this.initialized = false;
     }
-    Mysql.prototype.connect = function () {
+    Mysql.prototype.connect = function (eventEmitter) {
         this.con = mysql_package.createConnection(this.conf);
         this.con.connect(function (err) {
             if (err)
                 throw err;
-            console.log("Connected to mysql");
             this.initialized = true;
+            console.log("connected");
         });
     };
     Mysql.prototype.disconnect = function () {
@@ -35,6 +35,7 @@ var Mysql = /** @class */ (function () {
                 throw err;
             return result;
         });
+        return [];
     };
     return Mysql;
 }());

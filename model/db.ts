@@ -44,6 +44,11 @@ export class Db {
             },
             ''
         );
+        console.log(this.toString());
+    }
+
+    toString() {
+        return util.format(this.tables);
     }
 
 }

@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Classe: Table
- * Modélise une table
+ * Modélise une table rows[row][column]
  */
 var Table = /** @class */ (function () {
-    function Table(rows) {
+    function Table(rows, columns) {
         this.rows = rows;
+        this.columns = columns;
     }
     return Table;
 }());

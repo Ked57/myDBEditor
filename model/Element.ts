@@ -1,5 +1,4 @@
-﻿
-/**
+﻿/**
  * Classe: Element
  * Modélise un élément
  */

@@ -30,7 +30,11 @@ var Db = /** @class */ (function () {
             //detailed event information 
             //console.log(event)
         }, '');
+        console.log(this.toString());
     }
+    Db.prototype.toString = function () {
+        return util.format(this.tables);
+    };
     return Db;
 }());
 exports.Db = Db;
