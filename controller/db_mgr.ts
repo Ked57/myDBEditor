@@ -3,7 +3,7 @@ import { Table } from '../model/table';
 import { Column } from '../model/column';
 import { Element } from '../model/element';
 
-import events = require('events');
+import event = require('events');
 import util = require('util');
 import mysql_package = require('mysql');
 
@@ -14,9 +14,10 @@ import mysql_package = require('mysql');
 
 export class DbMgr {
     conf;
-    dbs: Db[];
+    db: Db;
+    result: Table;
     con: mysql_package.Connection;
-    events: events.EventEmitter;
+    events: event.EventEmitter;
     initialized: boolean;
 
     constructor() {
@@ -26,17 +27,23 @@ export class DbMgr {
             user: "test",
             password: "test"
         }
+        this.events = new event.EventEmitter();
+
+        //Initialisation des events
+        this.events.addListener("useDatabase", this.useDatabaseHandler.bind(this));
+        this.events.addListener("tablesListed", this.tablesListedHandler.bind(this));
+        this.events.addListener("tableInit", this.tableInitHandler.bind(this));
+
         this.initialized = false;
         this.con = mysql_package.createConnection(this.conf);
-        this.con.connect(this.initialize.bind(this))        
+        this.con.connect(this.initialize.bind(this));        
     }
 
     initialize(err) {
         if (err) throw err;
         console.log("Connected to mysql");
         this.initialized = true;
-        this.useDatabase('test');
-        console.log(this.query("SELECT test FROM test WHERE idtest=1;"));
+        this.useDatabase("test",this.conf,this.events);
     }
 
     disconnect() {
@@ -48,16 +55,82 @@ export class DbMgr {
         return this.initialized;
     }
 
-    useDatabase(database: string) {
-        this.query("USE " + database + ";");
+    useDatabase(database: string, conf, events: event.EventEmitter) {
+        this.con.query("USE " + database +";", function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            events.emit("useDatabase", database);            
+        });
     }
 
-    query(sql: string){
-        this.con.query(sql, function (err, result) {
+    select(sql: string){
+        let res: Table;
+        res = new Table([], [], "");
+        this.con.query(sql, function (err, result, fields) {
             if (err) throw err;
-            //todo return as a table
+            if (fields != undefined) {
+                fields.forEach(function (elem) {
+                    res.columns.push(new Column(elem.name, elem.type));
+                });
+                result.forEach(function (elem) {
+                    var row: any[] = [];
+                    fields.forEach(function (col) {
+                        row.push(elem[col.name]);
+                    });
+                    res.rows.push(row);
+                });
+                console.log(util.format(res));
+                res.name = "sucess";
+            } else res.name = "error";
         });
-        return {};
+        this.result = res;
     }
-    
+
+    initTable(tableName: string) {
+        let e: event;
+        e = this.events;
+        let sql: string = "SELECT * FROM " + tableName;
+        this.con.query(sql, function (err, result, fields) {
+            if (err) throw err;
+            if (fields != undefined) {
+                let res: Table;
+                res = new Table([], [], tableName);
+                fields.forEach(function (elem) {
+                    res.columns.push(new Column(elem.name, elem.type));
+                });
+                result.forEach(function (elem) {
+                    var row: any[] = [];
+                    fields.forEach(function (col) {
+                        row.push(elem[col.name]);
+                    });
+                    res.rows.push(row);
+                });
+                console.log(util.format(res));
+                e.emit("tableInit",res);
+            }
+        });
+    }
+
+    useDatabaseHandler(database: string) {
+        this.db = new Db([], this.conf, database);
+        let e = this.events;
+        console.log("dbhandler :" + database);
+        this.con.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='" + database +"';", function (err, result, fields) {
+            if (err) throw err;
+            e.emit("tablesListed", result);    
+        });
+    }
+
+    tablesListedHandler(result) {
+        console.log("tablesListedHandler");
+        console.log(result[0].TABLE_NAME);
+        for (var k in result) {
+            this.initTable(result[k].TABLE_NAME);
+        }
+    }
+
+    tableInitHandler(table: Table) {
+        console.log("tableInitHandler");
+        this.db.tables.push(table);
+    }
 }

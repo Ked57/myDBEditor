@@ -6,9 +6,9 @@
 
 export class Column {
     name: string;
-    type: string;//On stockera le type dans une chaine de caractères
+    type: number;//On stockera le type sous forme de nombre
 
-    constructor(name: string, type: string) {
+    constructor(name: string, type: number) {
         this.name = name;
         this.type = type;
     }

@@ -13,7 +13,7 @@ export class Db {
     mysqlEventWatcher;
     watcher;
 
-    constructor(tables, conf, name) {
+    constructor(tables: Table[], conf, name: string) {
         this.tables = tables;
         this.name = name;
         this.mysqlEventWatcher = mysql_events(conf);

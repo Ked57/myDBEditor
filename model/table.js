@@ -5,9 +5,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Modélise une table rows[row][column]
  */
 var Table = /** @class */ (function () {
-    function Table(rows, columns) {
+    function Table(rows, columns, name) {
         this.rows = rows;
         this.columns = columns;
+        this.name = name;
     }
     return Table;
 }());
