@@ -37,6 +37,12 @@
     <TypeScriptCompile Include="controller\db_mgr.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="controller\wrappers\mysql_wrapper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="controller\wrappers\wrapper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="model\column.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -59,6 +65,7 @@
     <Content Include="views\error.pug" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="controller\wrappers\" />
     <Folder Include="model\" />
     <Folder Include="controller\" />
     <Folder Include="public\" />
