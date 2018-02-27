@@ -50,5 +50,4 @@ export class Db {
     toString() {
         return util.format(this.tables);
     }
-
 }

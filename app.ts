@@ -1,14 +1,20 @@
 ﻿import debug = require('debug');
 import express = require('express');
+import bodyParser = require("body-parser");
 import path = require('path');
+import event = require('events');
 
-import routes from './routes/index';
+//import routes from './routes/index';
 
-import { DbMgr } from './controller/db_mgr'
+import { DbMgr } from './controller/db_mgr';
+import { Table } from './model/table';
 
 var app = express();
 
-let db_mgr: DbMgr;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+var db_mgr: DbMgr;
 db_mgr = new DbMgr();
 
 
@@ -18,7 +24,19 @@ app.set('view engine', 'pug');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+const routes = express.Router()
+
+routes.get('/', (req: express.Request, res: express.Response) => {
+    res.render('index', { title: 'Index' });
+});
+
+routes.post('/mydbeditor', function (req: express.Request, res: express.Response) {
+    //console.log('post got user: ' + req.body.user + " , pass : " + req.body.pwd);
+    res.render('main', { title: "MyDBEditor", tables: db_mgr.db.tables });
+});
+
 app.use('/', routes);
+app.use('/mydbeditor', routes);
 
 //Catch des erreurs 404
 app.use(function (req, res, next) {
@@ -51,8 +69,27 @@ app.use((err: any, req, res, next) => {
     });
 });
 
-app.set('port', process.env.PORT || 3000);
+//app.set('port', process.env.PORT || 3000);
+app.set('port', 8080);
 
 var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
 });
+
+var io = require('socket.io').listen(server);
+
+io.sockets.on('connection', function (socket) {
+    console.log("New client connected");
+
+    socket.on('load-table', function (name) {
+        db_mgr.db.tables.forEach(function (table) {
+            console.log(name);
+            if (table.name === name) {
+                console.log("good one : " + table.name);
+                socket.emit('table-loaded', table);
+                return;
+            }
+        });
+    });	
+});
+
