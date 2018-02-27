@@ -32,6 +32,9 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'pm2' ">
+    <OutputPath>bin\pm2\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="views\main.pug">
       <SubType>Code</SubType>
@@ -58,9 +61,6 @@
     <TypeScriptCompile Include="model\table.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <Content Include="public\css\bootstrap.min.css">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="public\css\main.css" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
@@ -79,15 +79,6 @@
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="public\js\bootstrap.min.js">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="public\js\jquery.js">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="public\js\popper.js">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="public\js\socketexange.js">
       <SubType>Code</SubType>
     </Compile>
