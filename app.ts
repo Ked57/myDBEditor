@@ -81,14 +81,18 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
     console.log("New client connected");
 
-    socket.on('load-table', function (name) {
+    socket.on('load-table', function (request) {
         db_mgr.db.tables.forEach(function (table) {
-            console.log(name);
-            if (table.name === name) {
-                socket.emit('table-loaded', table);
+            console.log(request.table);
+            if (table.name === request.table) {
+                console.log(request.interval);
+                socket.emit('table-loaded', table.getInterval(request.interval));
                 return;
             }
         });
     });	
+    socket.on('auto-update', function (modificationQueue) {
+        console.log(modificationQueue);
+    });
 });
 

@@ -22,7 +22,7 @@ socket.on('table-loaded', function (table) {
         var j = 0;
         content += "<tr>";
         row.forEach(function (value) {
-            content += '<td contenteditable class="editableCell" id="'+currTable.columns[j].name+";"+pk+"="+row[0]+'">' + value + '</td>';
+            content += '<td contenteditable class="editableCell" id="' + pk + "=" + row[0] +';'+currTable.columns[j].name+'=">' + value + '</td>';
             ++j;
         });
         content += "</tr>";
@@ -31,23 +31,39 @@ socket.on('table-loaded', function (table) {
     content += "</table>";
     $("#content").html(content);
     $("#alertDiv").delay(1000).fadeOut();
+    //Toute cette partie permet d'éviter l'envoi de doublons
     $(".editableCell").on("input", function () {
-        modificationQueue[this.id] = this.innerHTML;
-        if (modificationQueue.length == 0) modificationQueue.length++;
-        console.log(modificationQueue);
+        var id = this.id;
+        id = id.split("=");
+        var key = -1;
+        var i = 0;
+        modificationQueue.forEach(function (value) {
+            var str = value.split("=");
+            if (id[0] == str[0] && id[1] == str[1]) {
+                key = i;
+                return;
+            }
+            ++i;
+        });
+        if (key >= 0) {
+            modificationQueue[key] = this.id + this.innerHTML;
+        }else modificationQueue.push(this.id + this.innerHTML);
+        
     });
     window.setInterval(function () {
-        console.log(modificationQueue);
         if (modificationQueue.length > 0) {
-            modificationQueue["table"] = currTable.name;
+            modificationQueue.table = currTable.name;
+            console.log(modificationQueue);
             socket.emit("auto-update", modificationQueue);
-            modificationQueue = [];
             console.log("automaticaly sent update to server");
-        } else console.log("nothing to update");
+            modificationQueue = [];
+        } //else console.log("nothing to update");
     }, 1000);    
 });
 
 $("button").click(function () {
-    console.log("button click: " + this.id);
-    socket.emit('load-table', this.id);
+    var request = { table: this.id, interval: "0;50" };
+    console.log("request.table: " + request.table);
+    console.log("request.interval: " + request.interval);
+    socket.emit('load-table', request);
 }); 
