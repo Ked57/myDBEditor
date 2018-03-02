@@ -61,7 +61,6 @@ export class DbMgr {
     pkInitHandler(pk: any) {
         console.log("initializing primary key(s) " + pk["keys"] + " for table " + pk["table"]);
         this.db.tables.forEach(function (table) {
-            console.log(pk["table"]);
             if (table.name === pk["table"]) {
                 table.columns.forEach(function (col) {
                     pk["keys"].forEach(function (key) {
@@ -76,7 +75,6 @@ export class DbMgr {
     }
 
     handleModificationQueue(modificationQueue: any) {
-        console.log(modificationQueue);
         let table: string;
         let str: string[];
         let mgr: DbMgr;
@@ -90,7 +88,6 @@ export class DbMgr {
     }
 
     update(table: string, value: string, condition: string) {
-        console.log("table: " + table + " ; value: " + value + " ; condition: " + condition);
         let valueStr: string[], conditionStr: string[];
         valueStr = value.split("=");
         conditionStr = condition.split("=");

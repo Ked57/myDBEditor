@@ -24,17 +24,14 @@ var Table = /** @class */ (function () {
             var conditionOk;
             conditionOk = row.some(function (elem) {
                 ++j;
-                console.log(conditionCol + " == " + columns[j].name + " && " + condition + " == " + elem);
                 return (conditionCol == columns[j].name && condition == elem);
             });
             j = 0;
             console.log(conditionOk);
             if (conditionOk == true) {
                 return row.some(function (elem) {
-                    console.log("third some");
                     if (valueCol == columns[j].name) {
                         rows[i][j] = value;
-                        console.log("Value " + value + " set at [" + i + "][" + j + "]=" + rows[i][j]);
                         return true;
                     }
                     ++j;

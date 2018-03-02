@@ -65,7 +65,5 @@ socket.on('table-loaded', function (table) {
 
 $("button").click(function () {
     var request = { table: this.id, interval: "0;50" };
-    console.log("request.table: " + request.table);
-    console.log("request.interval: " + request.interval);
     socket.emit('load-table', request);
 }); 

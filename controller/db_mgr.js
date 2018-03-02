@@ -43,7 +43,6 @@ var DbMgr = /** @class */ (function () {
     DbMgr.prototype.pkInitHandler = function (pk) {
         console.log("initializing primary key(s) " + pk["keys"] + " for table " + pk["table"]);
         this.db.tables.forEach(function (table) {
-            console.log(pk["table"]);
             if (table.name === pk["table"]) {
                 table.columns.forEach(function (col) {
                     pk["keys"].forEach(function (key) {
@@ -57,7 +56,6 @@ var DbMgr = /** @class */ (function () {
         });
     };
     DbMgr.prototype.handleModificationQueue = function (modificationQueue) {
-        console.log(modificationQueue);
         var table;
         var str;
         var mgr;
@@ -70,7 +68,6 @@ var DbMgr = /** @class */ (function () {
         });
     };
     DbMgr.prototype.update = function (table, value, condition) {
-        console.log("table: " + table + " ; value: " + value + " ; condition: " + condition);
         var valueStr, conditionStr;
         valueStr = value.split("=");
         conditionStr = condition.split("=");
