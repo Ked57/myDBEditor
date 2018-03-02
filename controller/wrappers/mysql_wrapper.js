@@ -28,11 +28,17 @@ var MysqlWrapper = /** @class */ (function () {
             events.emit("useDatabase", database);
         });
     };
-    MysqlWrapper.prototype.query = function (sql, event, eventEmitter) {
+    MysqlWrapper.prototype.queryWithEvent = function (sql, event, eventEmitter) {
         this.con.query(sql, function (err, result, fields) {
             if (err)
                 throw err;
-            eventEmitter.emit("tablesListed", result);
+            eventEmitter.emit(event, result);
+        });
+    };
+    MysqlWrapper.prototype.query = function (sql) {
+        this.con.query(sql, function (err, result, fields) {
+            if (err)
+                throw err;
         });
     };
     MysqlWrapper.prototype.select = function (sql) {
@@ -98,6 +104,16 @@ var MysqlWrapper = /** @class */ (function () {
             console.log(pk);
             e.emit("pkInit", pk);
         });
+    };
+    MysqlWrapper.prototype.getInformationSchema = function (database, events) {
+        this.queryWithEvent("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA= '" + database + "';", "tablesListed", events);
+    };
+    MysqlWrapper.prototype.update = function (table, valueCol, value, valueType, conditionCol, condition, conditionType) {
+        if (valueType != 3)
+            value = '"' + value + '"';
+        if (conditionType != 3)
+            condition = '"' + condition + '"';
+        this.query("UPDATE " + table + " SET " + valueCol + "=" + value + " WHERE " + conditionCol + "=" + condition);
     };
     return MysqlWrapper;
 }());

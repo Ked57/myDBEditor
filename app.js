@@ -71,7 +71,7 @@ io.sockets.on('connection', function (socket) {
         });
     });
     socket.on('auto-update', function (modificationQueue) {
-        console.log(modificationQueue);
+        db_mgr.handleModificationQueue(modificationQueue);
     });
 });
 //# sourceMappingURL=app.js.map

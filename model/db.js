@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mysql_events = require("mysql-events");
 var util = require("util"); //Pour le developpement
+var table_1 = require("./table");
 /**
  * Classe: Db
  * Modélise une base de données
@@ -32,6 +33,16 @@ var Db = /** @class */ (function () {
         }, '');
         console.log(this.toString());
     }
+    Db.prototype.getTable = function (tableName) {
+        var t;
+        t = new table_1.Table([], [], "error");
+        this.tables.forEach(function (table) {
+            if (table.name == tableName) {
+                t = table;
+            }
+        });
+        return t;
+    };
     Db.prototype.toString = function () {
         return util.format(this.tables);
     };

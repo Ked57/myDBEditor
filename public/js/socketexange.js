@@ -35,24 +35,26 @@ socket.on('table-loaded', function (table) {
     $(".editableCell").on("input", function () {
         var id = this.id;
         id = id.split("=");
-        var key = -1;
+        var id2 = id[1].split(";");
+        var key = 0;
         var i = 0;
-        modificationQueue.forEach(function (value) {
-            var str = value.split("=");
-            if (id[0] == str[0] && id[1] == str[1]) {
+        modificationQueue.some(function (value) {
+            var str = value.split(";");
+            var str1 = str[1].split("=");
+            var str2 = str[2].split("=");
+            if (id[0] == str1[0] && id[1] == str2[0]) {
                 key = i;
-                return;
+                return true;
             }
             ++i;
         });
         if (key >= 0) {
-            modificationQueue[key] = this.id + this.innerHTML;
-        }else modificationQueue.push(this.id + this.innerHTML);
+            modificationQueue[key] = currTable.name+';'+this.id + this.innerHTML;
+        } else modificationQueue.push(currTable.name + ";"+this.id + this.innerHTML);
         
     });
     window.setInterval(function () {
         if (modificationQueue.length > 0) {
-            modificationQueue.table = currTable.name;
             console.log(modificationQueue);
             socket.emit("auto-update", modificationQueue);
             console.log("automaticaly sent update to server");

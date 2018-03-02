@@ -47,6 +47,17 @@ export class Db {
         console.log(this.toString());
     }
 
+    getTable(tableName: string): Table{
+        let t: Table;
+        t = new Table([], [], "error");
+        this.tables.forEach(function (table: Table) {
+            if (table.name == tableName) {
+                t = table;
+            }
+        });
+        return t;
+    }
+
     toString() {
         return util.format(this.tables);
     }

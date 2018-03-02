@@ -1,7 +1,6 @@
 ﻿import { Db } from '../model/db';
 import { Table } from '../model/table';
 import { Column } from '../model/column';
-import { Element } from '../model/element';
 import { Wrapper } from './wrappers/wrapper'
 import { MysqlWrapper } from './wrappers/mysql_wrapper';
 
@@ -43,7 +42,7 @@ export class DbMgr {
         this.db = new Db([], this.conf, database);
         let e = this.events;
         console.log("Using database :" + database);
-        this.wrapper.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA= '" + database + "';", "tablesListed", this.events);
+        this.wrapper.getInformationSchema(database, this.events);
     }
 
     tablesListedHandler(result) {
@@ -74,5 +73,28 @@ export class DbMgr {
                 return;
             }
         });
+    }
+
+    handleModificationQueue(modificationQueue: any) {
+        console.log(modificationQueue);
+        let table: string;
+        let str: string[];
+        let mgr: DbMgr;
+        mgr = this;
+        table = modificationQueue.table;
+        console.log("before table: " + table);
+        modificationQueue.forEach(function (elem) {
+            str = elem.split(";")
+            mgr.update(str[0], str[2], str[1]);
+        });
+    }
+
+    update(table: string, value: string, condition: string) {
+        console.log("table: " + table + " ; value: " + value + " ; condition: " + condition);
+        let valueStr: string[], conditionStr: string[];
+        valueStr = value.split("=");
+        conditionStr = condition.split("=");
+        this.wrapper.update(table, valueStr[0], valueStr[1], this.db.getTable(table).getColumn(valueStr[0]).type, conditionStr[0], conditionStr[1], this.db.getTable(table).getColumn(conditionStr[0]).type);
+        this.db.getTable(table).setValue(table, valueStr[0], valueStr[1], conditionStr[0], conditionStr[1]);
     }
 }

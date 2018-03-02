@@ -1,7 +1,6 @@
 ﻿import { Db } from '../../model/db';
 import { Table } from '../../model/table';
 import { Column } from '../../model/column';
-import { Element } from '../../model/element';
 import { Wrapper } from './wrapper';
 
 import event = require('events');
@@ -39,10 +38,16 @@ export class MysqlWrapper implements Wrapper {
         });
     }
 
-    query(sql: string, event: string, eventEmitter: event.EventEmitter) {
+    queryWithEvent(sql: string, event: string, eventEmitter: event.EventEmitter) {
         this.con.query(sql, function (err, result, fields) {
             if (err) throw err;
-            eventEmitter.emit("tablesListed", result);
+            eventEmitter.emit(event, result);
+        });
+    }
+
+    query(sql: string) {
+        this.con.query(sql, function (err, result, fields) {
+            if (err) throw err;
         });
     }
 
@@ -105,5 +110,15 @@ export class MysqlWrapper implements Wrapper {
             console.log(pk);
             e.emit("pkInit", pk);
         });
+    }
+
+    getInformationSchema(database: string, events: event.EventEmitter) {
+        this.queryWithEvent("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA= '" + database + "';", "tablesListed", events);
+    }
+
+    update(table: string, valueCol: string, value: string, valueType: number, conditionCol: string, condition : string, conditionType: number) {
+        if (valueType != 3) value = '"' + value + '"';
+        if (conditionType != 3) condition = '"' + condition + '"';
+        this.query("UPDATE " + table + " SET " + valueCol + "=" + value + " WHERE " + conditionCol+ "=" + condition);
     }
 }

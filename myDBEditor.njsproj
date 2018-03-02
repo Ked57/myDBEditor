@@ -55,9 +55,6 @@
     <TypeScriptCompile Include="model\db.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="model\element.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="model\table.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
