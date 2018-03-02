@@ -83,6 +83,21 @@ var MysqlWrapper = /** @class */ (function () {
                 e.emit("tableInit", res_1);
             }
         });
+        sql = "SHOW KEYS FROM " + tableName + " WHERE Key_name = 'PRIMARY'";
+        this.con.query(sql, function (err, result, fields) {
+            if (err)
+                throw err;
+            var pk;
+            pk = [];
+            pk["table"] = tableName;
+            pk["keys"] = [];
+            result.forEach(function (elem) {
+                console.log("found primary key " + elem.Column_name + " for table " + tableName);
+                pk["keys"].push(elem.Column_name);
+            });
+            console.log(pk);
+            e.emit("pkInit", pk);
+        });
     };
     return MysqlWrapper;
 }());

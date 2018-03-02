@@ -8,6 +8,7 @@ var Column = /** @class */ (function () {
     function Column(name, type) {
         this.name = name;
         this.type = type;
+        this.pk = false;
     }
     return Column;
 }());

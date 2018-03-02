@@ -91,5 +91,19 @@ export class MysqlWrapper implements Wrapper {
                 e.emit("tableInit", res);
             }
         });
+        sql = "SHOW KEYS FROM "+tableName+" WHERE Key_name = 'PRIMARY'"
+        this.con.query(sql, function (err, result, fields) {
+            if (err) throw err;
+            let pk;
+            pk = [];
+            pk["table"] = tableName;
+            pk["keys"] = [];
+            result.forEach(function (elem) {
+                console.log("found primary key " + elem.Column_name + " for table " + tableName);
+                pk["keys"].push(elem.Column_name);
+            });
+            console.log(pk);
+            e.emit("pkInit", pk);
+        });
     }
 }

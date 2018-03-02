@@ -21,23 +21,40 @@ var DbMgr = /** @class */ (function () {
         this.events.addListener("useDatabase", this.useDatabaseHandler.bind(this));
         this.events.addListener("tablesListed", this.tablesListedHandler.bind(this));
         this.events.addListener("tableInit", this.tableInitHandler.bind(this));
+        this.events.addListener("pkInit", this.pkInitHandler.bind(this));
     }
     DbMgr.prototype.useDatabaseHandler = function (database) {
         this.db = new db_1.Db([], this.conf, database);
         var e = this.events;
-        console.log("dbhandler :" + database);
+        console.log("Using database :" + database);
         this.wrapper.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA= '" + database + "';", "tablesListed", this.events);
     };
     DbMgr.prototype.tablesListedHandler = function (result) {
-        console.log("tablesListedHandler");
+        console.log("Table list recovered");
         console.log(result[0].TABLE_NAME);
         for (var k in result) {
             this.wrapper.initTable(result[k].TABLE_NAME);
         }
     };
     DbMgr.prototype.tableInitHandler = function (table) {
-        console.log("tableInitHandler");
+        console.log("table " + table.name + " initialized");
         this.db.tables.push(table);
+    };
+    DbMgr.prototype.pkInitHandler = function (pk) {
+        console.log("initializing primary key(s) " + pk["keys"] + " for table " + pk["table"]);
+        this.db.tables.forEach(function (table) {
+            console.log(pk["table"]);
+            if (table.name === pk["table"]) {
+                table.columns.forEach(function (col) {
+                    pk["keys"].forEach(function (key) {
+                        if (key == col.name) {
+                            col.pk = true;
+                        }
+                    });
+                });
+                return;
+            }
+        });
     };
     return DbMgr;
 }());

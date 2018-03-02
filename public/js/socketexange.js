@@ -6,22 +6,26 @@ socket.on('table-loaded', function (table) {
     console.log("received table-loaded event");
     console.log(table);
     currTable = table;
+    var pk = "";
     var content = '<div id="alertDiv" class="alert alert-success"><strong>Chargement réussi !</strong> La table ' + table.name + ' a été chargée.</div>';
     content += '<table class="table"><tr>';
     table.columns.forEach(function (col) {
+        if (col.pk == true) {
+            pk = col.name;
+        }
         content += "<th>" + col.name + "</th>";
     });
+    console.log(pk);
     content += "</tr>";
-    var i = 0;
+
     table.rows.forEach(function (row) {
         var j = 0;
         content += "<tr>";
         row.forEach(function (value) {
-            content += '<td contenteditable class="editableCell" id="'+currTable.columns[j].name+";"+i+'">' + value + '</td>';
+            content += '<td contenteditable class="editableCell" id="'+currTable.columns[j].name+";"+pk+"="+row[0]+'">' + value + '</td>';
             ++j;
         });
         content += "</tr>";
-        ++i;
     });
 
     content += "</table>";
@@ -38,7 +42,7 @@ socket.on('table-loaded', function (table) {
             modificationQueue["table"] = currTable.name;
             socket.emit("auto-update", modificationQueue);
             modificationQueue = [];
-            console.log("automaticaly sent update to serve");
+            console.log("automaticaly sent update to server");
         } else console.log("nothing to update");
     }, 1000);    
 });

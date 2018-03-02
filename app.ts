@@ -85,7 +85,6 @@ io.sockets.on('connection', function (socket) {
         db_mgr.db.tables.forEach(function (table) {
             console.log(name);
             if (table.name === name) {
-                console.log("good one : " + table.name);
                 socket.emit('table-loaded', table);
                 return;
             }
