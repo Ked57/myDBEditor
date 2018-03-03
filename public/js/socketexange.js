@@ -60,10 +60,21 @@ socket.on('table-loaded', function (table) {
             console.log("automaticaly sent update to server");
             modificationQueue = [];
         } //else console.log("nothing to update");
-    }, 1000);    
+    }, 1000);   
+
+    $("#tableLink").click(function () {
+        var request = { table: currTable.name, interval: "0;50" };
+        socket.emit('load-table', request);
+    });
 });
 
 $("button").click(function () {
     var request = { table: this.id, interval: "0;50" };
     socket.emit('load-table', request);
 }); 
+
+$("#reqLink").click(function () {
+    $("#content").html("req");
+});
+
+

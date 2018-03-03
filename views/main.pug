@@ -1,7 +1,26 @@
 ﻿extends layout
 
+block nav
+    nav.navbar.navbar-light.bg-primary.navbar-expand-md.sticky-top
+        a.navbar-brand(href='#') MyDBEditor
+        |   
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar1')
+            span.navbar-toggler-icon
+        |   
+        #navbar1.collapse.navbar-collapse
+            ul.navbar-nav.mr-auto
+                li.nav-item.active
+                    a.nav-link(href='#', id='tableLink') Table
+                |       
+                li.nav-item
+                    a.nav-link(href='#', id='reqLink') Requête
+                |
+                li.nav-item
+                    a.nav-link(href='#', id='accessLink') Droits
+                |
+
 block tables
-    p Tables
+    h2 Tables
     ul(class="list-group")
         each val in tables
             li(class="list-group-item")

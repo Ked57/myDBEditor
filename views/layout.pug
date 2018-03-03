@@ -3,11 +3,12 @@ html
   head
     title= title
 
-    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")  
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
 
     link(rel='stylesheet', href='/css/main.css')
   body
-    div(class='row')
+    block nav
+    div(class='row container-fluid')
         div(class='col-md-3')
             block tables
         div(class='col-md-6')
