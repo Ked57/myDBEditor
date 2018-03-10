@@ -16,7 +16,6 @@ export interface Wrapper {
     initialize(err);
     disconnect();
     useDatabase(database: string, conf, events: event.EventEmitter);
-    select(sql: string);
     initTable(tableName: string);
     getInformationSchema(database: string, events: event.EventEmitter);
     query(sql: string);

@@ -74,7 +74,27 @@ $("button").click(function () {
 }); 
 
 $("#reqLink").click(function () {
-    $("#content").html("req");
+    var content = ' <div class="form-group" id="reqForm"><label for="comment" > Votre requête:</label><textarea class="form-control" rows="5" id="req"></textarea><input type="submit" value="Envoyer" id="reqSubmit"></div>';
+    content += '<div id="result"></div>';
+    $("#content").html(content);
+    $("#reqSubmit").click(function () {
+        //e.preventDefault(); //prevent submit
+        var req = $('#req').val();
+        if (req != null && req != "") {
+            console.log("emiting request: " + req);
+            socket.emit('req', req);
+        }
+    });
+    socket.on('req-result', function (result) {
+        if (result != null) {
+            console.log(result);
+            if (result.message != null) {
+                $("#result").html(result.message);
+            } else if (result.code != null) {
+                $("#result").html("Erreur mysql : "+result.code);
+            } else $("#result").html('erreur inconnue');
+        }
+    });
 });
 
 

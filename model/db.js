@@ -8,10 +8,11 @@ var table_1 = require("./table");
  * Modélise une base de données
  */
 var Db = /** @class */ (function () {
-    function Db(tables, conf, name) {
+    function Db(tables, conf, name, events) {
         this.tables = tables;
         this.name = name;
         this.mysqlEventWatcher = mysql_events(conf);
+        this.events = events;
         this.watcher = this.mysqlEventWatcher.add(name, function (oldRow, newRow, event) {
             //row inserted 
             if (oldRow === null) {
@@ -29,9 +30,8 @@ var Db = /** @class */ (function () {
                 console.log(util.inspect(newRow, false, null));
             }
             //detailed event information 
-            //console.log(event)
+            console.log(event);
         }, '');
-        console.log(this.toString());
     }
     Db.prototype.getTable = function (tableName) {
         var t;

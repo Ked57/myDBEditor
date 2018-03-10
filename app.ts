@@ -82,17 +82,41 @@ io.sockets.on('connection', function (socket) {
     console.log("New client connected");
 
     socket.on('load-table', function (request) {
-        db_mgr.db.tables.forEach(function (table) {
+        db_mgr.db.tables.some(function (table) {
             console.log(request.table);
             if (table.name === request.table) {
                 console.log(request.interval);
                 socket.emit('table-loaded', table.getInterval(request.interval));
-                return;
+                socket.currTable = request.table;
+                return true;
             }
         });
     });	
     socket.on('auto-update', function (modificationQueue) {
         db_mgr.handleModificationQueue(modificationQueue);
+    });
+    socket.on('req', function (request) {
+        if (request != null && request != "") {
+            console.log('received req event : ' + request);
+            db_mgr.wrapper.queryWithEvent(request, 'req-result', db_mgr.events);
+            let reqSplit: string[];
+            reqSplit = request.split(" ");
+            if (reqSplit[0] == "ALTER" || reqSplit[0] == "INSERT") {
+                db_mgr.updateTable(reqSplit[2]);
+            } else if (reqSplit[0] == "UPDATE") {
+                db_mgr.updateTable(reqSplit[1]);
+            }
+        }
+    });
+
+    db_mgr.events.addListener('db_update', function (table) {
+
+    });
+
+    db_mgr.events.addListener('req-result', function (result) {
+        console.log('received and passed req-result with result = ');
+        console.log(result);
+        socket.emit('req-result', result);
     });
 });
 

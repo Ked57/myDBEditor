@@ -40,7 +40,7 @@ export class MysqlWrapper implements Wrapper {
 
     queryWithEvent(sql: string, event: string, eventEmitter: event.EventEmitter) {
         this.con.query(sql, function (err, result, fields) {
-            if (err) throw err;
+            if (err) eventEmitter.emit(event, err);
             eventEmitter.emit(event, result);
         });
     }
@@ -48,28 +48,6 @@ export class MysqlWrapper implements Wrapper {
     query(sql: string) {
         this.con.query(sql, function (err, result, fields) {
             if (err) throw err;
-        });
-    }
-
-    select(sql: string) {
-        this.con.query(sql, function (err, result, fields) {
-            let res: Table;
-            res = new Table([], [], "");
-            if (err) throw err;
-            if (fields != undefined) {
-                fields.forEach(function (elem) {
-                    res.columns.push(new Column(elem.name, elem.type));
-                });
-                result.forEach(function (elem) {
-                    var row: any[] = [];
-                    fields.forEach(function (col) {
-                        row.push(elem[col.name]);
-                    });
-                    res.rows.push(row);
-                });
-                console.log(util.format(res));
-                res.name = "sucess";
-            } else res.name = "error";
         });
     }
 

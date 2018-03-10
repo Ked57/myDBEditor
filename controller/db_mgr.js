@@ -24,7 +24,7 @@ var DbMgr = /** @class */ (function () {
         this.events.addListener("pkInit", this.pkInitHandler.bind(this));
     }
     DbMgr.prototype.useDatabaseHandler = function (database) {
-        this.db = new db_1.Db([], this.conf, database);
+        this.db = new db_1.Db([], this.conf, database, this.events);
         var e = this.events;
         console.log("Using database :" + database);
         this.wrapper.getInformationSchema(database, this.events);
@@ -39,6 +39,20 @@ var DbMgr = /** @class */ (function () {
     DbMgr.prototype.tableInitHandler = function (table) {
         console.log("table " + table.name + " initialized");
         this.db.tables.push(table);
+    };
+    DbMgr.prototype.updateTable = function (tableName) {
+        var dbs;
+        var wrap;
+        dbs = this.db;
+        wrap = this.wrapper;
+        dbs.tables.some(function (table) {
+            if (table.name == tableName) {
+                dbs.tables.splice(dbs.tables.indexOf(table), 1);
+                wrap.initTable(tableName);
+                console.log('updating table : ' + tableName);
+                return true;
+            }
+        });
     };
     DbMgr.prototype.pkInitHandler = function (pk) {
         console.log("initializing primary key(s) " + pk["keys"] + " for table " + pk["table"]);

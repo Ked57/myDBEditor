@@ -31,7 +31,7 @@ var MysqlWrapper = /** @class */ (function () {
     MysqlWrapper.prototype.queryWithEvent = function (sql, event, eventEmitter) {
         this.con.query(sql, function (err, result, fields) {
             if (err)
-                throw err;
+                eventEmitter.emit(event, err);
             eventEmitter.emit(event, result);
         });
     };
@@ -39,30 +39,6 @@ var MysqlWrapper = /** @class */ (function () {
         this.con.query(sql, function (err, result, fields) {
             if (err)
                 throw err;
-        });
-    };
-    MysqlWrapper.prototype.select = function (sql) {
-        this.con.query(sql, function (err, result, fields) {
-            var res;
-            res = new table_1.Table([], [], "");
-            if (err)
-                throw err;
-            if (fields != undefined) {
-                fields.forEach(function (elem) {
-                    res.columns.push(new column_1.Column(elem.name, elem.type));
-                });
-                result.forEach(function (elem) {
-                    var row = [];
-                    fields.forEach(function (col) {
-                        row.push(elem[col.name]);
-                    });
-                    res.rows.push(row);
-                });
-                console.log(util.format(res));
-                res.name = "sucess";
-            }
-            else
-                res.name = "error";
         });
     };
     MysqlWrapper.prototype.initTable = function (tableName) {

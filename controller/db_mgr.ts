@@ -39,7 +39,7 @@ export class DbMgr {
     }
 
     useDatabaseHandler(database: string) {
-        this.db = new Db([], this.conf, database);
+        this.db = new Db([], this.conf, database,this.events);
         let e = this.events;
         console.log("Using database :" + database);
         this.wrapper.getInformationSchema(database, this.events);
@@ -56,6 +56,21 @@ export class DbMgr {
     tableInitHandler(table: Table) {
         console.log("table " + table.name+" initialized");
         this.db.tables.push(table);
+    }
+
+    updateTable(tableName: string) {
+        let dbs: Db;
+        let wrap: Wrapper;
+        dbs = this.db;
+        wrap = this.wrapper;
+        dbs.tables.some(function (table) {
+            if (table.name == tableName) {
+                dbs.tables.splice(dbs.tables.indexOf(table), 1);
+                wrap.initTable(tableName);
+                console.log('updating table : ' + tableName);
+                return true;
+            }
+        });
     }
 
     pkInitHandler(pk: any) {

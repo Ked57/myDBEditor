@@ -1,5 +1,6 @@
 ﻿import mysql_events = require('mysql-events');
 import util = require('util');//Pour le developpement
+import event = require('events');
 import { Table } from './table';
 
 /**
@@ -11,12 +12,14 @@ export class Db {
     tables: Table[];
     name: string;
     mysqlEventWatcher;
+    events: event.EventEmitter;
     watcher;
 
-    constructor(tables: Table[], conf, name: string) {
+    constructor(tables: Table[], conf, name: string, events: event.EventEmitter) {
         this.tables = tables;
         this.name = name;
         this.mysqlEventWatcher = mysql_events(conf);
+        this.events = events;
 
         this.watcher = this.mysqlEventWatcher.add(
             name,
@@ -40,11 +43,10 @@ export class Db {
                 }
 
                 //detailed event information 
-                //console.log(event)
+                console.log(event)
             },
             ''
         );
-        console.log(this.toString());
     }
 
     getTable(tableName: string): Table{
