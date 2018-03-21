@@ -28,18 +28,20 @@ export class Db {
                 if (oldRow === null) {
                     //insert code goes here 
                     console.log("insert");
+                    events.emit('dbEventInsert', { newRow });
                 }
 
                 //row deleted 
                 if (newRow === null) {
                     //delete code goes here 
-                    console.log("update");
+                    console.log("delete");
+                    events.emit('dbEventDelete', { oldRow });
                 }
 
                 //row updated 
                 if (oldRow !== null && newRow !== null) {
                     //update code goes here 
-                    console.log(util.inspect(newRow, false, null))
+                    events.emit('dbEventUpdate', { newRow });
                 }
 
                 //detailed event information 

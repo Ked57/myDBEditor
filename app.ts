@@ -4,8 +4,6 @@ import bodyParser = require("body-parser");
 import path = require('path');
 import event = require('events');
 
-//import routes from './routes/index';
-
 import { DbMgr } from './controller/db_mgr';
 import { Table } from './model/table';
 
@@ -27,16 +25,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 const routes = express.Router()
 
 routes.get('/', (req: express.Request, res: express.Response) => {
-    res.render('index', { title: 'Index' });
-});
-
-routes.post('/mydbeditor', function (req: express.Request, res: express.Response) {
-    //console.log('post got user: ' + req.body.user + " , pass : " + req.body.pwd);
     res.render('main', { title: "MyDBEditor", tables: db_mgr.db.tables });
 });
 
 app.use('/', routes);
-app.use('/mydbeditor', routes);
 
 //Catch des erreurs 404
 app.use(function (req, res, next) {

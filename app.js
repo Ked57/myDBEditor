@@ -4,7 +4,6 @@ var debug = require("debug");
 var express = require("express");
 var bodyParser = require("body-parser");
 var path = require("path");
-//import routes from './routes/index';
 var db_mgr_1 = require("./controller/db_mgr");
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,14 +16,9 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 var routes = express.Router();
 routes.get('/', function (req, res) {
-    res.render('index', { title: 'Index' });
-});
-routes.post('/mydbeditor', function (req, res) {
-    //console.log('post got user: ' + req.body.user + " , pass : " + req.body.pwd);
     res.render('main', { title: "MyDBEditor", tables: db_mgr.db.tables });
 });
 app.use('/', routes);
-app.use('/mydbeditor', routes);
 //Catch des erreurs 404
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

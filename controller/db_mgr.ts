@@ -35,6 +35,7 @@ export class DbMgr {
         this.events.addListener("tablesListed", this.tablesListedHandler.bind(this));
         this.events.addListener("tableInit", this.tableInitHandler.bind(this));
         this.events.addListener("pkInit", this.pkInitHandler.bind(this));
+        this.events.addListener("dbEventUpdate", this.updateLocalDb.bind(this));
   
     }
 
@@ -92,14 +93,12 @@ export class DbMgr {
     handleModificationQueue(modificationQueue: any) {
         let table: string;
         let str: string[];
-        let mgr: DbMgr;
-        mgr = this;
         table = modificationQueue.table;
         console.log("before table: " + table);
         modificationQueue.forEach(function (elem) {
             str = elem.split(";")
-            mgr.update(str[0], str[2], str[1]);
-        });
+            this.update(str[0], str[2], str[1]);
+        },this);
     }
 
     update(table: string, value: string, condition: string) {
@@ -107,6 +106,18 @@ export class DbMgr {
         valueStr = value.split("=");
         conditionStr = condition.split("=");
         this.wrapper.update(table, valueStr[0], valueStr[1], this.db.getTable(table).getColumn(valueStr[0]).type, conditionStr[0], conditionStr[1], this.db.getTable(table).getColumn(conditionStr[0]).type);
-        this.db.getTable(table).setValue(table, valueStr[0], valueStr[1], conditionStr[0], conditionStr[1]);
+        this.db.getTable(table).setValue(valueStr[0], valueStr[1], conditionStr[0], conditionStr[1]);
+    }
+
+    updateLocalDb(table: string, value: string, condition: string) {
+
+    }
+
+    insertLocalDb(table: string, row: any[]) {
+
+    }
+
+    deleteLocalDb(table: string, condition: string) {
+
     }
 }

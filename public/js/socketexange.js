@@ -14,7 +14,7 @@ socket.on('table-loaded', function (table) {
             pk = col.name;
         }
         content += "<th>" + col.name + "</th>";
-    });
+    },this);
     console.log(pk);
     content += "</tr>";
 

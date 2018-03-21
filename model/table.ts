@@ -17,7 +17,7 @@ export class Table {
         this.name = name;
     }
 
-    setValue(table: string, valueCol: string, value: string, conditionCol: string, condition: string) {
+    setValue(valueCol: string, value: string, conditionCol: string, condition: string) {
 
         let columns: Column[];
         columns = this.columns;
@@ -86,6 +86,15 @@ export class Table {
                 return true;
             }
         });
+        return c;
+    }
+    getPrimaryKeyColumn(): Column {
+        let c: Column;
+        this.columns.forEach(function (column) {
+            if (column.pk) {
+                c = column;
+            }
+        }, this);
         return c;
     }
 }

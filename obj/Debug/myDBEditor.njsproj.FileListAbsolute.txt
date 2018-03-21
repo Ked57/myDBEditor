@@ -1,3 +1,6 @@
 D:\Documents\cloud\Programmation\github\myDBEditor\obj\Debug\myDBEditor.njsproj.CoreCompileInputs.cache
 D:\Documents\cloud\Programmation\github\myDBEditor\bin\Microsoft.NodejsTools.WebRole.dll
 D:\Documents\cloud\Programmation\github\myDBEditor\obj\Debug\myDBEditor.njsprojResolveAssemblyReference.cache
+C:\Users\Ked\Nextcloud\Programmation\github\myDBEditor\obj\Debug\myDBEditor.njsprojResolveAssemblyReference.cache
+C:\Users\Ked\Nextcloud\Programmation\github\myDBEditor\obj\Debug\myDBEditor.njsproj.CoreCompileInputs.cache
+C:\Users\Ked\Nextcloud\Programmation\github\myDBEditor\bin\Microsoft.NodejsTools.WebRole.dll
