@@ -1,0 +1,15 @@
+[
+  {
+    "name": "default",
+    "type": "mysql",
+    "host": "wow.shyndard.eu",
+    "port": 3306,
+    "username": "test",
+    "password": "test",
+    "database": "test",
+    "synchronize": false
+    "entities": [
+      "entities/*.js"
+    ]
+  }
+]

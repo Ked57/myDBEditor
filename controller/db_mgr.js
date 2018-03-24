@@ -11,9 +11,10 @@ var DbMgr = /** @class */ (function () {
     function DbMgr() {
         //A mettre dans un fichier de configuration à part
         this.conf = {
-            host: "127.0.0.1",
+            host: "wow.shyndard.eu",
             user: "test",
-            password: "test"
+            password: "test",
+            db: "test"
         };
         this.events = new event.EventEmitter();
         this.wrapper = new mysql_wrapper_1.MysqlWrapper(this.conf, this.events);
@@ -22,6 +23,7 @@ var DbMgr = /** @class */ (function () {
         this.events.addListener("tablesListed", this.tablesListedHandler.bind(this));
         this.events.addListener("tableInit", this.tableInitHandler.bind(this));
         this.events.addListener("pkInit", this.pkInitHandler.bind(this));
+        this.events.addListener("dbEventUpdate", this.updateLocalDb.bind(this));
     }
     DbMgr.prototype.useDatabaseHandler = function (database) {
         this.db = new db_1.Db([], this.conf, database, this.events);
@@ -72,21 +74,25 @@ var DbMgr = /** @class */ (function () {
     DbMgr.prototype.handleModificationQueue = function (modificationQueue) {
         var table;
         var str;
-        var mgr;
-        mgr = this;
         table = modificationQueue.table;
         console.log("before table: " + table);
         modificationQueue.forEach(function (elem) {
             str = elem.split(";");
-            mgr.update(str[0], str[2], str[1]);
-        });
+            this.update(str[0], str[2], str[1]);
+        }, this);
     };
     DbMgr.prototype.update = function (table, value, condition) {
         var valueStr, conditionStr;
         valueStr = value.split("=");
         conditionStr = condition.split("=");
         this.wrapper.update(table, valueStr[0], valueStr[1], this.db.getTable(table).getColumn(valueStr[0]).type, conditionStr[0], conditionStr[1], this.db.getTable(table).getColumn(conditionStr[0]).type);
-        this.db.getTable(table).setValue(table, valueStr[0], valueStr[1], conditionStr[0], conditionStr[1]);
+        this.db.getTable(table).setValue(valueStr[0], valueStr[1], conditionStr[0], conditionStr[1]);
+    };
+    DbMgr.prototype.updateLocalDb = function (table, value, condition) {
+    };
+    DbMgr.prototype.insertLocalDb = function (table, row) {
+    };
+    DbMgr.prototype.deleteLocalDb = function (table, condition) {
     };
     return DbMgr;
 }());

@@ -11,7 +11,7 @@ var Table = /** @class */ (function () {
         this.columns = columns;
         this.name = name;
     }
-    Table.prototype.setValue = function (table, valueCol, value, conditionCol, condition) {
+    Table.prototype.setValue = function (valueCol, value, conditionCol, condition) {
         var columns;
         columns = this.columns;
         var i;
@@ -79,6 +79,15 @@ var Table = /** @class */ (function () {
                 return true;
             }
         });
+        return c;
+    };
+    Table.prototype.getPrimaryKeyColumn = function () {
+        var c;
+        this.columns.forEach(function (column) {
+            if (column.pk) {
+                c = column;
+            }
+        }, this);
         return c;
     };
     return Table;

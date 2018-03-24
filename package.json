@@ -17,7 +17,9 @@
     "express": "^4.14.0",
     "pm2": "^2.10.1",
     "pug": "^2.0.0-rc.3",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "typeorm": "^0.1.16",
+    "typeorm-model-generator": "^0.2.11"
   },
   "devDependencies": {
     "@types/debug": "0.0.30",

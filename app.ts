@@ -15,6 +15,18 @@ app.use(bodyParser.json());
 var db_mgr: DbMgr;
 db_mgr = new DbMgr();
 
+const { exec } = require('child_process');
+exec('node node_modules/typeorm-model-generator/bin/typeorm-model-generator -h '+db_mgr.conf.host+' -d '+db_mgr.conf.db+' -u '+db_mgr.conf.user+' -x '+db_mgr.conf.password+' -e mysql -o .', (err, stdout, stderr) => {
+    if (err) {
+        console.log(err)
+        return;
+    }
+
+    // the *entire* stdout and stderr (buffered)
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+});
+
 
 //Démarrage du moteur de vues
 app.set('views', path.join(__dirname, 'views'));

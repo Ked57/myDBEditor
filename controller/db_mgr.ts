@@ -24,9 +24,10 @@ export class DbMgr {
     constructor() {
         //A mettre dans un fichier de configuration à part
         this.conf = {
-            host: "127.0.0.1",
+            host: "wow.shyndard.eu",
             user: "test",
-            password: "test"
+            password: "test",
+            db: "test"
         }
         this.events = new event.EventEmitter();
         this.wrapper = new MysqlWrapper(this.conf, this.events);

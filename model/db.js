@@ -18,16 +18,18 @@ var Db = /** @class */ (function () {
             if (oldRow === null) {
                 //insert code goes here 
                 console.log("insert");
+                events.emit('dbEventInsert', { newRow: newRow });
             }
             //row deleted 
             if (newRow === null) {
                 //delete code goes here 
-                console.log("update");
+                console.log("delete");
+                events.emit('dbEventDelete', { oldRow: oldRow });
             }
             //row updated 
             if (oldRow !== null && newRow !== null) {
                 //update code goes here 
-                console.log(util.inspect(newRow, false, null));
+                events.emit('dbEventUpdate', { newRow: newRow });
             }
             //detailed event information 
             console.log(event);

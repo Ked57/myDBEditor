@@ -10,6 +10,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var db_mgr;
 db_mgr = new db_mgr_1.DbMgr();
+var exec = require('child_process').exec;
+exec('node node_modules/typeorm-model-generator/bin/typeorm-model-generator -h ' + db_mgr.conf.host + ' -d ' + db_mgr.conf.db + ' -u ' + db_mgr.conf.user + ' -x ' + db_mgr.conf.password + ' -e mysql -o .', function (err, stdout, stderr) {
+    if (err) {
+        console.log(err);
+        return;
+    }
+    // the *entire* stdout and stderr (buffered)
+    console.log("stdout: " + stdout);
+    console.log("stderr: " + stderr);
+});
 //Démarrage du moteur de vues
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
