@@ -7,7 +7,7 @@ import util = require('util');//Pour le developpement
  */
 
 export class Table {
-    rows: any[][];
+    rows: any[][];//Le tableau contenant les valeurs
     columns: Column[];
     name: string;
 
@@ -16,7 +16,7 @@ export class Table {
         this.columns = columns;
         this.name = name;
     }
-
+    //Pour mettre à jour une valeur dans la base javascript
     setValue(valueCol: string, value: string, conditionCol: string, condition: string) {
 
         let columns: Column[];
@@ -48,8 +48,8 @@ export class Table {
             else return false;
         });
     }
-    
-    getInterval(str) {
+    //Pour sélectionner un certain interval d'une classe 
+    getInterval(str : string) {
         let strTab: string[];
         console.log(str);
         strTab = str.split(";");
@@ -76,7 +76,7 @@ export class Table {
         console.log(table.rows);
         return table;
     }
-
+    //Pour sélectionner une colonne
     getColumn(col: string): Column {
         let c: Column;
         c = new Column("error", 0);
@@ -88,6 +88,8 @@ export class Table {
         });
         return c;
     }
+
+    //Pour sélectionner la colonne clée primaire
     getPrimaryKeyColumn(): Column {
         let c: Column;
         this.columns.forEach(function (column) {

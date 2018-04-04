@@ -9,7 +9,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var db_mgr;
-db_mgr = new db_mgr_1.DbMgr();
+db_mgr = new db_mgr_1.DbMgr("test"); //nom de la base de données
 //Démarrage du moteur de vues
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -72,17 +72,7 @@ io.sockets.on('connection', function (socket) {
         if (request != null && request != "") {
             console.log('received req event : ' + request);
             db_mgr.wrapper.queryWithEvent(request, 'req-result', db_mgr.events);
-            var reqSplit = void 0;
-            reqSplit = request.split(" ");
-            if (reqSplit[0] == "ALTER" || reqSplit[0] == "INSERT") {
-                db_mgr.updateTable(reqSplit[2]);
-            }
-            else if (reqSplit[0] == "UPDATE") {
-                db_mgr.updateTable(reqSplit[1]);
-            }
         }
-    });
-    db_mgr.events.addListener('db_update', function (table) {
     });
     db_mgr.events.addListener('req-result', function (result) {
         console.log('received and passed req-result with result = ');

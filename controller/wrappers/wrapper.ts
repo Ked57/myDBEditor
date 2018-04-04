@@ -6,6 +6,11 @@ import event = require('events');
 import util = require('util');
 import mysql_package = require('mysql');
 
+/* Classe Wrapper
+    Permet d'avoir un type commun à utiliser dans l'application
+    Une classe PostegreWrapper pourrait donc être envisagées sans avoir a refaire toute l'application
+*/
+
 export interface Wrapper {
     con: mysql_package.Connection;
     events: event.EventEmitter;

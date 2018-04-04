@@ -2,7 +2,8 @@
 var modificationQueue = [];
 var currTable;
 
-socket.on('table-loaded', function (table) {
+//Event reçu quand la table est chargée
+socket.on('table-loaded', function (table) { 
     console.log("received table-loaded event");
     console.log(table);
     currTable = table;
@@ -67,12 +68,12 @@ socket.on('table-loaded', function (table) {
         socket.emit('load-table', request);
     });
 });
-
+//Quand on click sur un bouton de la liste des tables
 $("button").click(function () {
     var request = { table: this.id, interval: "0;50" };
     socket.emit('load-table', request);
 }); 
-
+//Pour montrer la page des requêtes
 $("#reqLink").click(function () {
     var content = ' <div class="form-group" id="reqForm"><label for="comment" > Votre requête:</label><textarea class="form-control" rows="5" id="req"></textarea><input type="submit" value="Envoyer" id="reqSubmit"></div>';
     content += '<div id="result"></div>';
@@ -88,7 +89,10 @@ $("#reqLink").click(function () {
     socket.on('req-result', function (result) {
         if (result != null) {
             console.log(result);
-            if (result.message != null) {
+            if (result.constructor === Array) {
+                $("#result").html(result);
+            }
+            else if (result.message != null) {
                 $("#result").html(result.message);
             } else if (result.code != null) {
                 $("#result").html("Erreur mysql : "+result.code);

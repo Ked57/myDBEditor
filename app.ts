@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 var db_mgr: DbMgr;
-db_mgr = new DbMgr();
+db_mgr = new DbMgr("test");//nom de la base de données
 
 
 //Démarrage du moteur de vues
@@ -69,10 +69,10 @@ var server = app.listen(app.get('port'), function () {
 });
 
 var io = require('socket.io').listen(server);
-
+//Gestion des communications avec le client
 io.sockets.on('connection', function (socket) {
     console.log("New client connected");
-
+    //Chargement d'une table
     socket.on('load-table', function (request) {
         db_mgr.db.tables.some(function (table) {
             console.log(request.table);
@@ -84,27 +84,18 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });	
+    //Reception d'une modification de la part du client
     socket.on('auto-update', function (modificationQueue) {
         db_mgr.handleModificationQueue(modificationQueue);
     });
-    socket.on('req', function (request) {
+    //Réception d'une requête
+    socket.on('req', function (request: string) {
         if (request != null && request != "") {
             console.log('received req event : ' + request);
             db_mgr.wrapper.queryWithEvent(request, 'req-result', db_mgr.events);
-            let reqSplit: string[];
-            reqSplit = request.split(" ");
-            if (reqSplit[0] == "ALTER" || reqSplit[0] == "INSERT") {
-                db_mgr.updateTable(reqSplit[2]);
-            } else if (reqSplit[0] == "UPDATE") {
-                db_mgr.updateTable(reqSplit[1]);
-            }
         }
     });
-
-    db_mgr.events.addListener('db_update', function (table) {
-
-    });
-
+    //Pour renvoyer le résultat de la requête
     db_mgr.events.addListener('req-result', function (result) {
         console.log('received and passed req-result with result = ');
         console.log(result);
